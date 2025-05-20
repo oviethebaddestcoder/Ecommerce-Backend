@@ -5,9 +5,8 @@ require("dotenv").config();
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const hpp = require("hpp");
-const mongoSanitize = require("express-mongo-sanitize");
 const compression = require("compression");
-
+const sanitize = require("./middlewares/sanitize"); 
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-routes");
 const adminOrderRouter = require("./routes/admin/order-routes");
@@ -38,7 +37,7 @@ app.use(express.json());
 
 // ✅ Security and performance middlewares
 app.use(compression());
-app.use(mongoSanitize());
+app.use(sanitize); 
 app.use(hpp());
 app.use(xss());
 app.use(helmet());
