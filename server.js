@@ -3,8 +3,6 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
 const helmet = require("helmet");
-const xss = require("xss-clean");
-const hpp = require("hpp");
 const compression = require("compression");
 const sanitize = require("./middlewares/sanitize"); 
 const authRouter = require("./routes/auth/auth-routes");
@@ -38,8 +36,6 @@ app.use(express.json());
 // ✅ Security and performance middlewares
 app.use(compression());
 app.use(sanitize); 
-app.use(hpp());
-app.use(xss());
 app.use(helmet());
 
 // ✅ Connect to DB
