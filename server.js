@@ -21,7 +21,7 @@ const compression = require('compression');
 
 
 
-
+const app = express();
 
 app.use(compression());
 app.use(mongoSanitize());
@@ -32,7 +32,6 @@ app.use(helmet());
 // Connect to database
 connectDB();
 
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(
