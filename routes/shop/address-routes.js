@@ -1,5 +1,4 @@
 const express = require("express");
-
 const {
   addAddress,
   fetchAllAddress,
@@ -10,15 +9,15 @@ const {
 const router = express.Router();
 
 // Add address for user
-router.post("/users/:userId/addresses/add", addAddress);
+router.post("/:userId/add", addAddress);
 
 // Get all addresses for user
-router.get("/users/:userId/addresses", fetchAllAddress);
+router.get("/:userId", fetchAllAddress);
 
 // Delete address for user
-router.delete("/users/:userId/addresses/:addressId", deleteAddress);
+router.delete("/:userId/:addressId", deleteAddress);
 
 // Update address for user
-router.put("/users/:userId/addresses/:addressId", editAddress);
+router.put("/:userId/:addressId", editAddress);
 
 module.exports = router;
