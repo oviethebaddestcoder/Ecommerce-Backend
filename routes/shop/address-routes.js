@@ -9,9 +9,16 @@ const {
 
 const router = express.Router();
 
-router.post("/add", addAddress);
-router.get("/get/:userId", fetchAllAddress);
-router.delete("/delete/:userId/:addressId", deleteAddress);
-router.put("/update/:userId/:addressId", editAddress);
+// Add address for user
+router.post("/users/:userId/addresses/add", addAddress);
+
+// Get all addresses for user
+router.get("/users/:userId/addresses", fetchAllAddress);
+
+// Delete address for user
+router.delete("/users/:userId/addresses/:addressId", deleteAddress);
+
+// Update address for user
+router.put("/users/:userId/addresses/:addressId", editAddress);
 
 module.exports = router;

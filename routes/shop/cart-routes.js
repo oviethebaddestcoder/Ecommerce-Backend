@@ -9,15 +9,15 @@ const {
 const router = express.Router();
 
 // Add product to cart
-router.post("/:userId/add", addToCart);
+router.post("/users/:userId/cart/add", addToCart);
 
 // Get user's cart
-router.get("/:userId", fetchCartItems);
+router.get("/users/:userId/cart", fetchCartItems);
 
 // Update cart item quantity
-router.put("/:userId/update", updateCartItemQty);
+router.put("/users/:userId/cart/update", updateCartItemQty);
 
 // Delete cart item
-router.delete("/:userId/product/:productId", deleteCartItem);
+router.delete("/users/:userId/cart/product/:productId", deleteCartItem);
 
 module.exports = router;
