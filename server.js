@@ -12,8 +12,22 @@ const shopAddressRouter = require("./routes/shop/address-routes");
 const shopOrderRouter = require("./routes/shop/order-routes");
 const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
-
 const commonFeatureRouter = require("./routes/common/feature-routes");
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const mongoSanitize = require('express-mongo-sanitize');
+const compression = require('compression');
+
+
+
+
+
+app.use(compression());
+app.use(mongoSanitize());
+app.use(hpp());
+app.use(xss());
+app.use(helmet());
 
 // Connect to database
 connectDB();
