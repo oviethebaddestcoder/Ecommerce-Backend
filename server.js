@@ -23,11 +23,15 @@ const PORT = process.env.PORT || 5000;
 // ✅ CORS should be the FIRST middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://chizzy-cap-ecommerce-frontend.vercel.app"
+    ],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
 );
+
 
 // ✅ Then parse cookies and JSON
 app.use(cookieParser());
