@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
+const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const compression = require("compression");
 const sanitize = require("./middlewares/sanitize"); 
@@ -20,6 +21,11 @@ const connectDB = require("./config/db");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
+
+app.set("trust proxy", 1);
+
+
 // ✅ CORS should be the FIRST middleware
 app.use(
   cors({
@@ -31,6 +37,17 @@ app.use(
     credentials: true,
   })
 );
+
+
+// ✅ Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
 
 
 // ✅ Then parse cookies and JSON
