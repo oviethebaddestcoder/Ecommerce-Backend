@@ -2,17 +2,18 @@ const Product = require("../../models/Product");
 
 const searchProducts = async (req, res) => {
   try {
-    const { keyword } = req.params;
-    if (!keyword || typeof keyword !== "string") {
+    const { keyword = "", page = 1, limit = 12 } = req.query;
+
+    if (typeof keyword !== "string") {
       return res.status(400).json({
-        succes: false,
-        message: "Keyword is required and must be in string format",
+        success: false,
+        message: "Keyword must be a string.",
       });
     }
 
     const regEx = new RegExp(keyword, "i");
 
-    const createSearchQuery = {
+    const query = {
       $or: [
         { title: regEx },
         { description: regEx },
@@ -21,17 +22,25 @@ const searchProducts = async (req, res) => {
       ],
     };
 
-    const searchResults = await Product.find(createSearchQuery);
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [data, total] = await Promise.all([
+      Product.find(query).skip(skip).limit(Number(limit)),
+      Product.countDocuments(query),
+    ]);
 
     res.status(200).json({
       success: true,
-      data: searchResults,
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      data,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Search Error:", error);
     res.status(500).json({
       success: false,
-      message: "Error",
+      message: "Server error while searching products",
     });
   }
 };

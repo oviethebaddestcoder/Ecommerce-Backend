@@ -10,6 +10,7 @@ const {
   forgotPassword,
   resetPassword,
   logoutUser,
+  getCurrentUser,
   authMiddleware,
 } = require("../../controllers/auth/auth-controller");
 
@@ -48,5 +49,7 @@ router.get("/admin/dashboard", authMiddleware("admin"), (req, res) => {
 router.get("/user/dashboard", authMiddleware("user"), (req, res) => {
   res.json({ success: true, message: "Welcome User!", user: req.user });
 });
+
+router.get("/me", getCurrentUser);
 
 module.exports = router;

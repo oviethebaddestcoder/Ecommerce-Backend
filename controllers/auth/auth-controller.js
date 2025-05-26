@@ -246,6 +246,19 @@ const authMiddleware = (requiredRole = null) => (req, res, next) => {
   }
 };
 
+const getCurrentUser = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ success: false, message: "Not authenticated" });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({ success: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ success: false, message: "Invalid token" });
+  }
+};
+
+
 module.exports = {
   registerUser,
   verifyEmail,
@@ -255,5 +268,6 @@ module.exports = {
   forgotPassword,
   resetPassword,
   logoutUser,
+  getCurrentUser,
   authMiddleware,
 };
