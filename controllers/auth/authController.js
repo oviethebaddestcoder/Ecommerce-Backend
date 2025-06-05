@@ -1,8 +1,8 @@
-const User = require('../models/user-model');
+const User = require('../../models/User');
 const { clerkClient } = require('@clerk/clerk-sdk-node');
 
-// Helper to sync Clerk user to MongoDB
-async function syncClerkUserToDB(clerkUser, role = 'user') {
+// Helper: Sync Clerk user with MongoDB
+const syncClerkUserToDB = async (clerkUser, role = 'user') => {
   const existingUser = await User.findOne({ clerkId: clerkUser.id });
   if (existingUser) return existingUser;
 
@@ -13,10 +13,10 @@ async function syncClerkUserToDB(clerkUser, role = 'user') {
     role,
     isVerified: clerkUser.emailAddresses[0]?.verification?.status === 'verified',
   });
-}
+};
 
-// Register a regular user...
-exports.registerUser = async (req, res) => {
+// Register regular user
+const registerUser = async (req, res) => {
   try {
     const { email, password, username } = req.body;
 
@@ -27,15 +27,15 @@ exports.registerUser = async (req, res) => {
     });
 
     const dbUser = await syncClerkUserToDB(clerkUser, 'user');
-    return res.status(201).json({ user: dbUser });
+    res.status(201).json({ user: dbUser });
   } catch (error) {
     console.error('User registration error:', error);
-    return res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Register an admin
-exports.registerAdmin = async (req, res) => {
+// Register admin
+const registerAdmin = async (req, res) => {
   try {
     const { email, password, username } = req.body;
 
@@ -46,23 +46,30 @@ exports.registerAdmin = async (req, res) => {
     });
 
     const dbUser = await syncClerkUserToDB(clerkUser, 'admin');
-    return res.status(201).json({ user: dbUser });
+    res.status(201).json({ user: dbUser });
   } catch (error) {
     console.error('Admin registration error:', error);
-    return res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Sync the logged-in Clerk user to DB
-exports.syncLoggedInUser = async (req, res) => {
+// Sync signed-in Clerk user to MongoDB
+const syncLoggedInUser = async (req, res) => {
   try {
-    const { userId: clerkUserId } = req.auth; // Populated by Clerk middleware
+    const { userId: clerkUserId } = req.auth;
+
     const clerkUser = await clerkClient.users.getUser(clerkUserId);
     const dbUser = await syncClerkUserToDB(clerkUser);
 
-    return res.status(200).json({ user: dbUser });
+    res.status(200).json({ user: dbUser });
   } catch (error) {
     console.error('Sync error:', error);
-    return res.status(500).json({ error: 'Failed to sync user' });
+    res.status(500).json({ error: 'Failed to sync user' });
   }
+};
+
+module.exports = {
+  registerUser,
+  registerAdmin,
+  syncLoggedInUser,
 };
