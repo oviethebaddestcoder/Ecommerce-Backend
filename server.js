@@ -17,6 +17,7 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 const commonFeatureRouter = require("./routes/common/feature-routes");
 const connectDB = require("./config/db");
+const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,6 +54,8 @@ app.use(limiter);
 // ✅ Then parse cookies and JSON
 app.use(cookieParser());
 app.use(express.json());
+app.use(ClerkExpressWithAuth())
+
 
 // ✅ Security and performance middlewares
 app.use(compression());
