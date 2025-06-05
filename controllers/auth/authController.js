@@ -15,7 +15,7 @@ async function syncClerkUserToDB(clerkUser, role = 'user') {
   });
 }
 
-// Register a regular user
+// Register a regular user...
 exports.registerUser = async (req, res) => {
   try {
     const { email, password, username } = req.body;
