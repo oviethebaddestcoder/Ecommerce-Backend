@@ -6,18 +6,24 @@ const {
   deleteAddress,
 } = require("../../controllers/shop/address-controller");
 
+const verifyFirebaseToken = require("../../middlewares/verifyFirebaseToken");
+const requireRole = require("../../middlewares/roleCheck");
+
 const router = express.Router();
 
-// Add address for user
-router.post("/:userId/add", addAddress);
+// ✅ All routes require user to be logged in
+router.use(verifyFirebaseToken, requireRole("user"));
 
-// Get all addresses for user
-router.get("/:userId", fetchAllAddress);
+// POST /api/user/addresses - Add address
+router.post("/", addAddress);
 
-// Delete address for user
-router.delete("/:userId/:addressId", deleteAddress);
+// GET /api/user/addresses - Get all addresses of the logged-in user
+router.get("/", fetchAllAddress);
 
-// Update address for user
-router.put("/:userId/:addressId", editAddress);
+// PUT /api/user/addresses/:addressId - Update a specific address
+router.put("/:addressId", editAddress);
+
+// DELETE /api/user/addresses/:addressId - Delete a specific address
+router.delete("/:addressId", deleteAddress);
 
 module.exports = router;
