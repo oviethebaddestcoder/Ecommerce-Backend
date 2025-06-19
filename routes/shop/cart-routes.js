@@ -6,18 +6,24 @@ const {
   updateCartItemQty,
 } = require("../../controllers/shop/cart-controller");
 
+const verifyFirebaseToken = require("../../middlewares/verifyFirebaseToken");
+const requireRole = require("../../middlewares/roleCheck");
+
 const router = express.Router();
 
-// Add product to cart
-router.post("/:userId/add", addToCart);
+// ✅ Secure all routes with Firebase Auth + user role
+router.use(verifyFirebaseToken, requireRole("user"));
 
-// Get user's cart
-router.get("/:userId", fetchCartItems);
+// POST /api/user/cart - Add product to cart
+router.post("/", addToCart);
 
-// Update cart item quantity
-router.put("/:userId/update", updateCartItemQty);
+// GET /api/user/cart - Get current user's cart
+router.get("/", fetchCartItems);
 
-// Delete cart item
-router.delete("/:userId/product/:productId", deleteCartItem);
+// PUT /api/user/cart - Update quantity
+router.put("/", updateCartItemQty);
+
+// DELETE /api/user/cart/:productId - Remove product from cart
+router.delete("/:productId", deleteCartItem);
 
 module.exports = router;
